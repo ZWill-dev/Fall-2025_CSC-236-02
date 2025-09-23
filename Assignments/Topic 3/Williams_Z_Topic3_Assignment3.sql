@@ -1,3 +1,12 @@
+/*
+ * @Author       : Zavier Williams
+ * @Date Created : September 22, 2025
+ * @File Name    : Williams_Z_Topic3_Assignment3.sql
+ * @Project      : Topic 3 Assignment
+ * @Description  : Demonstrating SELECT in SQL.
+ *
+ */
+ 
 # 1. Retrieve all columns from employees table
 SELECT * FROM employees;
 
