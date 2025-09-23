@@ -3,7 +3,7 @@
  * @Date Created : September 22, 2025
  * @File Name    : Williams_Z_Topic3_Assignment3.sql
  * @Project      : Topic 3 Assignment
- * @Description  : Demonstrating SELECT in SQL.
+ * @Description  : Demonstrating SELECT in SQL using existing database and its tables.
  *
  */
  
