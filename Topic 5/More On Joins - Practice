@@ -1,3 +1,5 @@
+# Utilizes SiftNThrift DB
+
 # 1.List every order with its customer name and the employee who handled it.
 SELECT o.OrderID, o.OrderDate, c.Company AS Customer,
 CONCAT(e.FirstName, ' ', e.LastName) AS Employee
