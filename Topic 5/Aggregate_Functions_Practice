@@ -1,0 +1,68 @@
+# Aggregate Functions Practice
+# Utilizes SiftNThrift DB
+
+# Aggregate Functions
+
+# 1.Write a query to find the total number of orders in the database.
+SELECT COUNT(OrderID) AS TotalOrders
+FROM Orders;
+
+# 2. Find the total number of customers in the Customers table.
+SELECT COUNT(CustomerID) AS TotalCustomers
+FROM Customers;
+
+# 3. Find the average unit price of all products.
+SELECT ROUND(AVG(Price), 2) AS AvgUnitPrice
+FROM Products;
+
+# 4. Write a query to find the highest and lowest unit price among all products.
+SELECT MIN(Price) AS LowestPrice, MAX(Price) AS HighestPrice
+FROM Products;
+
+# 5. Calculate the total sales amount (Quantity × UnitPrice) from the OrderDetails table.
+SELECT FORMAT(SUM(od.Quantity * p.Price), 2) AS 'Total Sales Amount'
+FROM OrderDetails od
+INNER JOIN Products p ON od.ProductID = p.ProductID;
+
+
+# Aggregate Functions with GROUP BY and HAVING
+
+# 6. List each customer and the total number of orders they placed.
+SELECT c.CustomerID, c.Company AS Customer, COUNT(o.OrderID) AS TotalOrdersPlaced
+FROM Customers c
+INNER JOIN Orders o ON c.CustomerID = o.CustomerID
+GROUP BY c.CustomerID, c.Company
+ORDER BY c.CustomerID;
+
+# 7. Show each employee and the number of orders they handled.
+SELECT e.EmployeeID, e.FirstName, e.LastName, COUNT(o.OrderID) AS OrdersHandled
+FROM Employees e
+INNER JOIN Orders o ON e.EmployeeID = o.EmployeeID
+GROUP BY e.EmployeeID, e.FirstName, e.LastName
+ORDER BY EmployeeID;
+
+# 8. Find all products that were sold in more than 50 total units (sum of quantities). **********************************
+SELECT p.ProductID, p.ProductName, SUM(Quantity) AS UnitsSold
+FROM Products p
+INNER JOIN OrderDetails od ON p.ProductID = od.ProductID
+GROUP BY p.ProductID, p.ProductName
+HAVING UnitsSold > 50
+ORDER BY p.ProductID;
+
+# 9. Display each supplier and their average product price, but only include suppliers whose average price is greater than $30.
+SELECT s.SupplierID, s.SupplierName, ROUND(AVG(p.Price), 2) AS 'Average Product Price'
+FROM Suppliers s
+INNER JOIN Products p ON s.SupplierID = p.SupplierID
+GROUP BY s.SupplierID, s.SupplierName
+HAVING ROUND(AVG(p.Price), 2) > 30
+ORDER BY s.SupplierID;
+
+# 10. List each customer and their total purchase amount, but only show customers whose total purchases exceed $5,000.
+SELECT c.CustomerID,c.Company AS Customer, ROUND(SUM(od.Quantity * p.Price), 2) AS 'Total Purchase Amount'
+FROM Customers c
+INNER JOIN Orders o ON c.CustomerID = o.CustomerID
+INNER JOIN OrderDetails od ON o.OrderID = od.OrderID
+INNER JOIN Products p ON od.ProductID = p.ProductID
+GROUP BY c.CustomerID, Customer
+HAVING ROUND(SUM(od.Quantity * p.Price), 2) > 5000
+ORDER BY c.CustomerID;
