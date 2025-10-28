@@ -1,0 +1,118 @@
+# Utilizes Denormalized Data from a University Course Management .csv to create a database in MySQL
+
+USE UniCourseManagement;
+
+CREATE TABLE Departments (
+	DepartmentID INT PRIMARY KEY AUTO_INCREMENT,
+    DepartmentName VARCHAR(100) NOT NULL UNIQUE
+    );
+    
+CREATE TABLE Courses (
+	CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(100) NOT NULL,
+    CourseCode CHAR(6),
+    Credits INT,
+    DepartmentID INT,
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
+    );
+
+CREATE TABLE Instructors (
+	InstructorID INT PRIMARY KEY AUTO_INCREMENT,
+    InstructorFirstName VARCHAR(50) NOT NULL,
+    InstructorLastName VARCHAR(50) NOT NULL,
+    InstructorEmail VARCHAR(100) NOT NULL UNIQUE
+    );
+    
+CREATE TABLE Students (
+	StudentID INT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    Phone VARCHAR(15),
+    Address VARCHAR(100),
+    City VARCHAR(50),
+    State CHAR(2),
+    Zip VARCHAR(10),
+    Major VARCHAR(100),
+    DepartmentID INT,
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
+    );
+    
+CREATE TABLE Enrollments (
+	EnrollmentID INT PRIMARY KEY,
+    StudentID INT,
+    CourseID INT,
+    InstructorID INT,
+    Semester VARCHAR(6),
+    Year YEAR,
+    Grade VARCHAR(2),
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID),
+    FOREIGN KEY (InstructorID) REFERENCES Instructors(InstructorID),
+    UNIQUE(StudentID, CourseID, Semester, Year) # Student can't be in the same class twice in one semester
+    );
+    
+INSERT INTO Departments
+VALUES (1, 'Computer Science');
+
+INSERT INTO Departments
+VALUES (2, 'Data Analytics'),
+	    (3, 'Mathematics');
+
+# SQL doesn't reseed IDs - I deleted 2 and 3 and readded them and they were at id 4 and 5; its how auto-increment works for some reason
+ 
+ INSERT INTO Courses
+ VALUES (2001, 'Intro to Programming', 'CSC101', 3, 1);
+ 
+ INSERT INTO Courses
+ VALUES (2002, 'Database Systems', 'CSC242', 3, 
+		(SELECT DepartmentID FROM Departments
+         WHERE DepartmentName = 'Data Analytics')
+         ),
+		(2003, 'Calculus I', 'MTH101', 4,
+        (SELECT DepartmentID FROM Departments
+		 WHERE DepartmentName = 'Mathematics')
+);
+
+INSERT INTO Instructors (InstructorFirstName, InstructorLastName, InstructorEmail)
+VALUES ('John', 'Miller', 'jmiller@bhcc.edu'),
+	   ('Ali', 'Azhari', 'aazhari@bhcc.edu'),
+       ('Maria', 'Torres', 'mtorres@bhcc.edu')
+;
+
+INSERT INTO Students
+VALUES (1001, 'Sarah', 'Kim', 'skim@email.com', '617-555-1212',
+		'10 Main St', 'Boston', 'MA', '02115', 'Computer Science',
+        (SELECT DepartmentID FROM Departments WHERE DepartmentName =
+        'Computer Science')),
+        
+        (1002, 'Ahmed', 'Ali', 'aali@email.com', '781-555-4422',
+		'45 Beacon St', 'Quincy', 'MA', '02169', 'Data Analytics',
+        (SELECT DepartmentID FROM Departments WHERE DepartmentName =
+        'Data Analytics')),
+        
+        (1003, 'Emily', 'Rodriguez', 'erodriguez@email.com', '978-555-8833',
+		'89 High St', 'Cambridge', 'MA', '02138', 'Mathematics',
+        (SELECT DepartmentID FROM Departments WHERE DepartmentName =
+        'Mathematics')
+);
+
+INSERT INTO Enrollments
+VALUES (5001, 1001, 2001, (SELECT InstructorID FROM Instructors WHERE InstructorEmail = 'jmiller@bhcc.edu'),
+	   'Fall', 2022, 'A'),
+       
+       (5002, 1002, 2002, (SELECT InstructorID FROM Instructors WHERE InstructorEmail = 'aazhari@bhcc.edu'),
+	   'Spring', 2023, 'B+'),
+       
+       (5003, 1001, 2002, (SELECT InstructorID FROM Instructors WHERE InstructorEmail = 'jmiller@bhcc.edu'),
+	   'Fall', 2023, 'A-'),
+       
+       (5004, 1003, 2003, (SELECT InstructorID FROM Instructors WHERE InstructorEmail = 'mtorres@bhcc.edu'),
+	   'Spring', 2022, 'A')
+;
+       
+
+       
+
+
+
