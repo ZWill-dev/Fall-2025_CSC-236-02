@@ -110,9 +110,13 @@ VALUES (5001, 1001, 2001, (SELECT InstructorID FROM Instructors WHERE Instructor
        (5004, 1003, 2003, (SELECT InstructorID FROM Instructors WHERE InstructorEmail = 'mtorres@bhcc.edu'),
 	   'Spring', 2022, 'A')
 ;
-       
 
-       
+-- Shorten Instructors column names
+USE UniCourseManagement;
+ALTER TABLE Instructors
+RENAME COLUMN InstructorFirstName TO FirstName,
+RENAME COLUMN InstructorLastName TO LastName,
+RENAME COLUMN InstructorEmail TO Email;
 
 
 
