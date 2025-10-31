@@ -118,5 +118,7 @@ RENAME COLUMN InstructorFirstName TO FirstName,
 RENAME COLUMN InstructorLastName TO LastName,
 RENAME COLUMN InstructorEmail TO Email;
 
+/* Use this to start your AUTO_INCREMENT at a set value:
+I.e. ALTER TABLE Students AUTO_INCREMENT = 1001 */
 
 
