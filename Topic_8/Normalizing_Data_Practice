@@ -122,3 +122,20 @@ RENAME COLUMN InstructorEmail TO Email;
 I.e. ALTER TABLE Students AUTO_INCREMENT = 1001 */
 
 
+SELECT * FROM Instuctors;
+
+ALTER TABLE Instructors
+ADD DepartmentID INT,
+ADD FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID);
+
+# Alter Instructors table to include Departments
+UPDATE Instructors
+SET
+	DepartmentID = CASE InstructorID
+		WHEN 1 THEN 1
+        WHEN 2 THEN 2
+        WHEN 3 THEN 3
+	END
+WHERE InstructorID IN (1, 2, 3);
+
+
